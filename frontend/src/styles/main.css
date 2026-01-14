@@ -1,0 +1,11 @@
+@import "tailwindcss";
+@import "./variables.css";
+@import "./navbar.css";
+@import "./auth.css";
+@import "./home.css";
+
+/* Global resets if needed */
+body {
+    background-color: var(--color-bg-gray);
+    @apply antialiased;
+}
