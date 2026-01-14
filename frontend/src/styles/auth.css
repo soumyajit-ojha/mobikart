@@ -1,0 +1,19 @@
+.auth-container {
+    @apply max-w-4xl mx-auto mt-10 bg-white flex shadow-lg rounded-sm overflow-hidden min-h-[520px];
+}
+
+.auth-sidebar {
+    @apply w-2/5 bg-fk-blue p-10 text-white flex flex-col;
+}
+
+.auth-form-container {
+    @apply w-3/5 p-10 relative flex flex-col justify-between;
+}
+
+.fk-input {
+    @apply w-full border-b border-gray-300 focus:border-fk-blue outline-none py-2 transition-colors;
+}
+
+.fk-btn-yellow {
+    @apply w-full bg-fk-yellow text-white py-3 rounded-sm font-bold shadow-md hover:bg-fk-yellow/90;
+}

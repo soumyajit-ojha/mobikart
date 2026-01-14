@@ -1,0 +1,71 @@
+/* Custom styles for the Flipkart Navbar */
+
+.navbar-wrapper {
+    @apply bg-fk-blue text-white py-2.5 sticky top-0 z-50 shadow-md;
+}
+
+.navbar-content {
+    @apply max-w-6xl mx-auto flex items-center px-4 gap-4;
+}
+
+/* Logo Section */
+.logo-container {
+    @apply flex flex-col italic font-bold leading-none cursor-pointer;
+}
+
+.logo-main {
+    @apply text-xl;
+}
+
+.logo-plus {
+    @apply text-[10px] text-fk-yellow flex items-center gap-0.5;
+}
+
+/* Search Bar Section */
+.search-wrapper {
+    @apply flex-1 max-w-xl relative mx-4;
+}
+
+.search-field {
+    @apply w-full py-2 px-4 pr-10 text-black text-sm rounded-sm focus:outline-none placeholder-gray-500 shadow-sm;
+}
+
+.search-icon {
+    @apply absolute right-3 top-2 text-fk-blue;
+}
+
+/* Actions Section (Login, Cart, etc.) */
+.nav-actions {
+    @apply flex items-center space-x-8 font-semibold text-[15px];
+}
+
+.nav-item-link {
+    @apply flex items-center gap-2 hover:opacity-90 transition-opacity cursor-pointer;
+}
+
+/* The iconic white Login button */
+.nav-login-btn {
+    @apply bg-white text-fk-blue px-8 py-1 rounded-sm font-bold border border-white hover:bg-gray-100 transition-colors;
+}
+
+/* User Account Dropdown */
+.account-dropdown {
+    @apply relative cursor-pointer py-1;
+
+    /* Show dropdown on hover using CSS nesting */
+    &:hover .dropdown-menu {
+        @apply block;
+    }
+}
+
+.dropdown-menu {
+    @apply hidden absolute top-full -right-4 w-56 bg-white text-black shadow-2xl rounded-sm border border-gray-100 mt-1 overflow-hidden;
+}
+
+.dropdown-item {
+    @apply flex items-center gap-3 p-3 hover:bg-gray-50 border-b border-gray-100 text-sm transition-colors;
+}
+
+.dropdown-item:last-child {
+    @apply border-b-0;
+}
