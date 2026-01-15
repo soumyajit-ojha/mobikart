@@ -90,3 +90,6 @@ async def delete_account(user_id: int = Header(...), db: Session = Depends(get_d
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="An error occurred while deleting the account.",
         )
+
+
+##
