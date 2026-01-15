@@ -52,8 +52,8 @@
 .account-dropdown {
     @apply relative cursor-pointer py-1;
 
-    /* Show dropdown on hover using CSS nesting */
-    &:hover .dropdown-menu {
+    /* Show dropdown on click using .open class */
+    &.open .dropdown-menu {
         @apply block;
     }
 }
