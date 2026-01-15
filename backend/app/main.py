@@ -7,7 +7,7 @@ app = FastAPI()
 origins = [
     "http://localhost:5173",  # For Local Development
     "http://127.0.0.1:5173",  # For Local Development
-    "https://newgate-ai.vercel.app",  # THIS IS ACTUAL VERCEL OR MAIN DOMAIN
+    "https://sellphoneind.vercel.app",  # THIS IS ACTUAL VERCEL OR MAIN DOMAIN
 ]
 
 # CORS Configuration (Essential for React Frontend)
