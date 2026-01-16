@@ -13,7 +13,7 @@ from app.schemas.ecommerce import (
 )
 from typing import List
 
-router = APIRouter(prefix="/shop", tags=["Ecommerce"])
+router = APIRouter(tags=["Ecommerce"])
 
 # --- WISHLIST LOGIC (Toggle functionality) ---
 
@@ -100,6 +100,13 @@ async def add_to_cart(
         db.add(cart_item)
 
     db.commit()
+
+    # 3. Update Cart Total
+    cart.total_amount = sum(
+        item.price_at_addition * item.quantity for item in cart.items
+    )
+    db.commit()
+
     db.refresh(cart)
     return cart
 
@@ -116,6 +123,7 @@ async def get_my_cart(
     if not cart:
         # Return empty cart structure
         return {
+            "id": 0,
             "user_id": user.id,
             "status": CartStatus.CURRENT,
             "total_amount": 0,
@@ -143,6 +151,12 @@ async def remove_from_cart(
     if not item:
         raise HTTPException(status_code=404, detail="Item not found in your cart")
 
+    cart = item.cart
     db.delete(item)
     db.commit()
+
+    # Update Total
+    cart.total_amount = sum(i.price_at_addition * i.quantity for i in cart.items)
+    db.commit()
+
     return {"message": "Item removed from cart"}

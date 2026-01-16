@@ -25,4 +25,4 @@ app.add_middleware(
 app.include_router(auth.router, prefix="/auth")
 app.include_router(profile.router, prefix="/user")
 app.include_router(products.router, prefix="/products")
-app.include_router(ecommerce.router, prefix="/ecommerce")
+app.include_router(ecommerce.router, prefix="/shop")

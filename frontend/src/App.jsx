@@ -5,6 +5,8 @@ import HomePage from './pages/HomePage';
 import Login from './pages/LoginPage';
 import Register from './pages/Register';
 import Profile from './pages/Profile';
+import ProductDetail from './pages/ProductDetail';
+import CartPage from './pages/CartPage';
 import SellerLanding from './pages/SellerLanding';
 
 function App() {
@@ -24,6 +26,8 @@ function App() {
               <Route path="/seller-register" element={<Register isSeller={true} />} />
 
               <Route path="/profile" element={<Profile />} />
+              <Route path="/product/:id" element={<ProductDetail />} />
+              <Route path="/cart" element={<CartPage />} />
             </Routes>
           </div>
         </div>

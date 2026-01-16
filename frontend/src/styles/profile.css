@@ -1,0 +1,27 @@
+.profile-section {
+    @apply space-y-8;
+}
+
+.profile-card {
+    @apply bg-white p-6 shadow-sm rounded-sm;
+}
+
+.profile-input-group {
+    @apply flex flex-col gap-2;
+}
+
+.profile-label {
+    @apply text-sm text-gray-500 font-medium;
+}
+
+.profile-btn-save {
+    @apply bg-fk-blue text-white px-10 py-3 font-bold rounded-sm mt-4 hover:shadow-md transition-shadow;
+}
+
+.profile-pic-wrapper {
+    @apply relative w-32 h-32 rounded-full border-4 border-gray-100 overflow-hidden group;
+}
+
+.profile-pic-overlay {
+    @apply absolute inset-0 bg-black/40 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 cursor-pointer transition-opacity;
+}

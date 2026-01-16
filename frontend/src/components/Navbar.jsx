@@ -73,6 +73,9 @@ const Navbar = () => {
                     )}
 
                     <Link to="/seller" className="hidden lg:block">Become a Seller</Link>
+                    {isLoggedIn && localStorage.getItem('userType') === 'seller' && (
+                        <Link to="/seller-dashboard" className="hidden lg:block">Seller Dashboard</Link>
+                    )}
 
                     <Link to="/cart" className="nav-item-link">
                         <ShoppingCart size={20} />

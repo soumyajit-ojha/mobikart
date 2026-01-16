@@ -6,7 +6,7 @@ from app.schemas.user import UserCreate, UserResponse, UserLogin
 from app.core.security import get_hashed_password, verify_password
 from typing import Optional
 
-router = APIRouter()
+router = APIRouter(tags=["Authentication"])
 
 
 @router.post("/register", response_model=UserResponse)

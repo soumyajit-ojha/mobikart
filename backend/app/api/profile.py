@@ -9,8 +9,9 @@ from app.schemas.user import (
     UserResponse,
 )
 from typing import List
+from app.services.s3_service import upload_image_to_s3, delete_image_from_s3
 
-router = APIRouter()
+router = APIRouter(tags=["Profile"])
 
 
 # Helper to get current user from header

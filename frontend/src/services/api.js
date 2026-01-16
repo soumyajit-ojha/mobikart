@@ -1,10 +1,14 @@
 import axios from 'axios';
 
+// Use relative /api for Vercel Proxy (Production) or direct IP for local
 const api = axios.create({
-    baseURL: import.meta.env.VITE_API_URL,
+    baseURL: import.meta.env.MODE === 'production' ? '/api' : import.meta.env.VITE_API_URL,
+    paramsSerializer: {
+        indexes: null, // by default arrays are serialized as brand[]=Apple, this changes it to brand=Apple
+    }
 });
 
-// Interceptor to add user-id header to every request
+// Interceptor: Automatically injects 'user-id' into every request header
 api.interceptors.request.use((config) => {
     const userId = localStorage.getItem('userId');
     if (userId) {

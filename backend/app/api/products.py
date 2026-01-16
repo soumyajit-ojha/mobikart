@@ -11,10 +11,10 @@ from app.schemas.product import (
     FilterOptionsResponse,
 )
 from app.api.deps import get_current_seller
-from app.services.s3_service import upload_image_to_s3  # Assuming s3 service exists
+from app.services.s3_service import upload_image_to_s3, delete_image_from_s3
 from typing import List, Optional
 
-router = APIRouter()
+router = APIRouter(tags=["Products"])
 
 
 @router.get("/filter-options", response_model=FilterOptionsResponse)
@@ -50,7 +50,7 @@ async def search_mobiles(
     brand: Optional[List[str]] = Query(None),
     ram: Optional[List[int]] = Query(None),
     rom: Optional[List[int]] = Query(None),
-    network: Optional[List[str]] = Query(None),
+    network_type: Optional[List[str]] = Query(None),
     processor: Optional[List[str]] = Query(None),
     min_price: Optional[float] = None,
     max_price: Optional[float] = None,
@@ -69,8 +69,8 @@ async def search_mobiles(
         query = query.filter(Product.ram.in_(ram))
     if rom:
         query = query.filter(Product.rom.in_(rom))
-    if network:
-        query = query.filter(Product.network_type.in_(network))
+    if network_type:
+        query = query.filter(Product.network_type.in_(network_type))
     if processor:
         query = query.filter(Product.processor.in_(processor))
 
@@ -86,6 +86,19 @@ async def search_mobiles(
     query = query.order_by(Product.created_at.desc())
 
     return query.all()
+
+
+@router.get("/{product_id}", response_model=ProductResponse)
+async def get_product_details(product_id: int, db: Session = Depends(get_db)):
+    """Retrieve details for a single product"""
+    product = (
+        db.query(Product)
+        .filter(Product.id == product_id, Product.is_active == True)
+        .first()
+    )
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+    return product
 
 
 @router.post("/add", response_model=ProductResponse)

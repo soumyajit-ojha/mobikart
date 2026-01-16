@@ -13,10 +13,17 @@ const Login = ({ isSeller = false }) => {
         e.preventDefault();
         try {
             const res = await userService.login({ email, password });
+            // res.data contains user_id and user_type
             login(res.data.user_id, res.data.user_type);
-            navigate('/');
+
+            // Redirect based on role
+            if (res.data.user_type === 'seller') {
+                navigate('/seller-dashboard');
+            } else {
+                navigate('/');
+            }
         } catch (err) {
-            alert("Login Failed: " + err.response?.data?.detail);
+            alert(err.response?.data?.detail || "Login Failed");
         }
     };
 
