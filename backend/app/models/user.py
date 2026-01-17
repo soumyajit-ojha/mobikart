@@ -30,6 +30,9 @@ class User(BaseModel):
     # One-to-one relationship with Profile
     profile = relationship("Profile", back_populates="user", uselist=False)
     addresses = relationship("Address", back_populates="user")
+    products = relationship("Product", back_populates="seller")
+    carts = relationship("Cart", back_populates="user")
+    wishlist = relationship("Wishlist", back_populates="user")
 
 
 class Profile(BaseModel):
