@@ -1,52 +1,23 @@
-import React, { useState } from 'react';
-import { ChevronDown, Filter } from 'lucide-react';
+const FilterSidebar = ({ options, selectedFilters, onFilterChange }) => {
 
-const FilterSidebar = ({ options, onFilterChange }) => {
-    // Local state to track selected values for each category
-    const [selected, setSelected] = useState({
-        brand: [],
-        ram: [],
-        rom: [],
-        network_type: [],
-        min_price: 0,
-        max_price: 200000
-    });
-
-    if (!options) return <div className="w-64 bg-white p-4">Loading filters...</div>;
-
-    const handleCheckboxChange = (category, value) => {
-        const isAlreadySelected = selected[category].includes(value);
-        let newSelection;
-
-        if (isAlreadySelected) {
-            newSelection = selected[category].filter(item => item !== value);
-        } else {
-            newSelection = [...selected[category], value];
-        }
-
-        const newFilters = { ...selected, [category]: newSelection };
-        setSelected(newFilters);
-
-        // Notify parent (HomePage)
-        // Note: For backend compatibility, we send the array or null
-        onFilterChange(category, newSelection.length > 0 ? newSelection : null);
+    const handleCheck = (category, value) => {
+        // Ensure current is always an array to prevent .includes error
+        const current = selectedFilters[category] || [];
+        const updated = current.includes(value)
+            ? current.filter(v => v !== value)
+            : [...current, value];
+        onFilterChange(category, updated);
     };
 
-    const handlePriceChange = (e) => {
-        const value = e.target.value;
-        setSelected(prev => ({ ...prev, max_price: value }));
-        onFilterChange('max_price', value);
-    };
+    if (!options) return <div className="w-64 bg-white p-6 animate-pulse">Loading filters...</div>;
 
     return (
-        <div className="w-64 bg-white shadow-sm h-fit sticky top-20 hidden md:block">
-            <div className="p-4 border-b flex items-center justify-between">
-                <h2 className="font-bold text-lg uppercase flex items-center gap-2">
-                    <Filter size={18} /> Filters
-                </h2>
+        <aside className="w-64 bg-white shadow-sm h-fit sticky top-20 hidden md:block border-r rounded-sm">
+            <div className="p-4 border-b flex justify-between items-center">
+                <h2 className="font-bold text-lg uppercase tracking-tight">Filters</h2>
                 <button
-                    onClick={() => window.location.reload()}
-                    className="text-xs text-fk-blue font-bold uppercase"
+                    onClick={() => window.location.href = "/"}
+                    className="text-[10px] text-fk-blue font-bold uppercase hover:underline"
                 >
                     Clear All
                 </button>
@@ -54,83 +25,89 @@ const FilterSidebar = ({ options, onFilterChange }) => {
 
             {/* Price Filter */}
             <div className="p-4 border-b">
-                <h3 className="text-xs font-bold uppercase mb-4 flex justify-between">
-                    Price <span>Up to ₹{selected.max_price}</span>
-                </h3>
+                <p className="text-xs font-bold uppercase text-gray-500 mb-4">Price</p>
                 <input
                     type="range"
-                    min={options.price_range.min}
-                    max={options.price_range.max}
-                    value={selected.max_price}
-                    onChange={handlePriceChange}
-                    className="w-full accent-fk-blue"
+                    min="0"
+                    max={options.max_price_limit || 200000}
+                    value={selectedFilters.max_p || 200000}
+                    onChange={(e) => onFilterChange('max_p', e.target.value)}
+                    className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-fk-blue"
                 />
-                <div className="flex justify-between text-[10px] text-gray-500 mt-2">
-                    <span>₹{options.price_range.min}</span>
-                    <span>₹{options.price_range.max}</span>
+                <div className="flex justify-between text-[10px] mt-2 text-gray-500 font-bold">
+                    <span>₹0</span>
+                    <span>₹{(Number(selectedFilters.max_p) || 0).toLocaleString()}</span>
                 </div>
             </div>
 
-            {/* Dynamic Brand Filter */}
-            <FilterSection
+            {/* Logic: We use '|| []' to ensure an array is ALWAYS passed to FilterGroup */}
+
+            <FilterGroup
                 title="Brand"
-                items={options.brands}
-                selectedItems={selected.brand}
-                onChange={(val) => handleCheckboxChange('brand', val)}
+                items={options.brands || []}
+                selected={selectedFilters.brand || []}
+                onToggle={(v) => handleCheck('brand', v)}
             />
 
-            {/* Dynamic RAM Filter */}
-            <FilterSection
+            <FilterGroup
                 title="RAM"
-                items={options.ram_options}
-                selectedItems={selected.ram}
+                items={options.ram_options || []}
+                selected={selectedFilters.ram || []}
+                onToggle={(v) => handleCheck('ram', v)}
                 suffix=" GB"
-                onChange={(val) => handleCheckboxChange('ram', val)}
             />
 
-            {/* Dynamic ROM Filter */}
-            <FilterSection
+            <FilterGroup
                 title="Internal Storage"
-                items={options.rom_options}
-                selectedItems={selected.rom}
+                items={options.rom_options || []}
+                selected={selectedFilters.rom || []}
+                onToggle={(v) => handleCheck('rom', v)}
                 suffix=" GB"
-                onChange={(val) => handleCheckboxChange('rom', val)}
             />
 
-            {/* Network Type */}
-            <FilterSection
+            <FilterGroup
                 title="Network Type"
-                items={options.network_types}
-                selectedItems={selected.network_type}
-                onChange={(val) => handleCheckboxChange('network_type', val)}
+                items={options.network_types || []}
+                selected={selectedFilters.network || []}
+                onToggle={(v) => handleCheck('network', v)}
             />
-        </div>
+
+            <FilterGroup
+                title="Screen Size"
+                items={options.screen_sizes || []}
+                selected={selectedFilters.screen || []}
+                onToggle={(v) => handleCheck('screen', v)}
+                suffix=" inch"
+            />
+        </aside>
     );
 };
 
-// Helper sub-component for repeated sections
-const FilterSection = ({ title, items, selectedItems, onChange, suffix = "" }) => (
-    <div className="p-4 border-b">
-        <div className="flex justify-between items-center mb-2 cursor-pointer group">
-            <h3 className="text-xs font-bold uppercase">{title}</h3>
-            <ChevronDown size={14} className="text-gray-400 group-hover:text-black" />
+// Added default parameters to items and selected to prevent crashes
+const FilterGroup = ({ title, items = [], selected = [], onToggle, suffix = "" }) => {
+    // If there are no items for this category, don't render the section at all (FAANG Best Practice)
+    if (items.length === 0) return null;
+
+    return (
+        <div className="p-4 border-b">
+            <p className="text-[11px] font-bold uppercase text-gray-500 mb-3">{title}</p>
+            <div className="space-y-2.5 max-h-48 overflow-y-auto scrollbar-thin">
+                {items.map(item => (
+                    <label key={item} className="flex items-center gap-2.5 text-sm cursor-pointer group">
+                        <input
+                            type="checkbox"
+                            checked={selected.includes(item)}
+                            onChange={() => onToggle(item)}
+                            className="w-4 h-4 accent-fk-blue rounded-sm"
+                        />
+                        <span className="text-gray-700 group-hover:text-fk-blue transition-colors">
+                            {item}{suffix}
+                        </span>
+                    </label>
+                ))}
+            </div>
         </div>
-        <div className="space-y-2 mt-3 max-h-48 overflow-y-auto scrollbar-hide">
-            {items.map(item => (
-                <label key={item} className="flex items-center gap-2 cursor-pointer group">
-                    <input
-                        type="checkbox"
-                        className="w-4 h-4 accent-fk-blue"
-                        checked={selectedItems.includes(item)}
-                        onChange={() => onChange(item)}
-                    />
-                    <span className="text-sm text-gray-700 group-hover:text-fk-blue capitalize">
-                        {item}{suffix}
-                    </span>
-                </label>
-            ))}
-        </div>
-    </div>
-);
+    );
+};
 
 export default FilterSidebar;

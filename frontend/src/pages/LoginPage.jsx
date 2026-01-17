@@ -1,85 +1,101 @@
 import { useState } from 'react';
-import { userService } from '../services/userService';
-import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { userService } from '../services/userService';
 
-const Login = ({ isSeller = false }) => {
+const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
+
     const { login } = useAuth();
     const navigate = useNavigate();
 
-    const handleLogin = async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        setError('');
+        setLoading(true);
+
         try {
+            console.log(email, password);
             const res = await userService.login({ email, password });
-            // res.data contains user_id and user_type
-            login(res.data.user_id, res.data.user_type);
+            console.log(res);
+            // Extract from backend response: { access_token, token_type, user_role }
+            login(res.data.access_token, res.data.user_role);
 
             // Redirect based on role
-            if (res.data.user_type === 'seller') {
+            if (res.data.user_role === 'seller') {
                 navigate('/seller-dashboard');
             } else {
                 navigate('/');
             }
         } catch (err) {
-            alert(err.response?.data?.detail || "Login Failed");
+            setError(err.response?.data?.detail || "Login failed. Please try again.");
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <div className="auth-container">
-            {/* Left Sidebar - Now matching Register */}
-            <div className="auth-sidebar">
-                <h2 className="text-3xl font-bold mb-4">
-                    {isSeller ? "Seller Login" : "Login"}
-                </h2>
+        <div className="max-w-4xl mx-auto mt-12 bg-white flex shadow-2xl rounded-sm overflow-hidden min-h-[520px]">
+            {/* Left Sidebar (Flipkart Style) */}
+            <div className="w-2/5 bg-fk-blue p-10 text-white flex flex-col">
+                <h2 className="text-3xl font-bold mb-4">Login</h2>
                 <p className="text-lg opacity-80 leading-relaxed">
-                    {isSeller
-                        ? "Manage your inventory, track orders and grow your business."
-                        : "Get access to your Orders, Wishlist and Recommendations"}
+                    Get access to your Orders, Wishlist and Recommendations
                 </p>
-                {/* SellPhone-style illustration placeholder */}
                 <img
                     src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/login_img_c4a81e.png"
                     alt="login-illustration"
-                    className="mt-auto self-center w-48 mb-10"
+                    className="mt-auto self-center w-48"
                 />
             </div>
 
-            {/* Right side form */}
-            <div className="auth-form-container">
-                <form onSubmit={handleLogin} className="space-y-6">
-                    <input
-                        type="email"
-                        placeholder="Enter Email"
-                        className="fk-input"
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                    />
-                    <input
-                        type="password"
-                        placeholder="Enter Password"
-                        className="fk-input"
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-
-                    <div className="text-[12px] text-gray-500">
-                        By continuing, you agree to SellPhone's Terms of Use and Privacy Policy.
+            {/* Right Form */}
+            <div className="w-3/5 p-10 relative">
+                <form onSubmit={handleSubmit} className="space-y-6">
+                    <div className="relative border-b border-gray-300 focus-within:border-fk-blue">
+                        <input
+                            type="email"
+                            required
+                            placeholder="Enter Email"
+                            className="w-full py-2 outline-none text-sm"
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                    </div>
+                    <div className="relative border-b border-gray-300 focus-within:border-fk-blue">
+                        <input
+                            type="password"
+                            required
+                            placeholder="Enter Password"
+                            className="w-full py-2 outline-none text-sm"
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
                     </div>
 
-                    <button className="fk-btn-yellow">
-                        Login
+                    {error && <p className="text-red-500 text-xs font-bold">{error}</p>}
+
+                    <p className="text-[12px] text-gray-500">
+                        By continuing, you agree to SellPhone's Terms of Use and Privacy Policy.
+                    </p>
+
+                    <button
+                        disabled={loading}
+                        className="w-full bg-fk-yellow text-white py-3 rounded-sm font-bold shadow-md hover:shadow-lg transition-all"
+                    >
+                        {loading ? "Authenticating..." : "Login"}
                     </button>
                 </form>
 
-                <Link to={isSeller ? "/seller-register" : "/register"} className="text-center text-fk-blue font-semibold py-4 bg-gray-50 shadow-inner mt-10">
-                    {isSeller ? "New Seller? Create a seller account" : "New to SellPhone? Create an account"}
-                </Link>
+                <div className="absolute bottom-10 left-0 right-0 text-center">
+                    <Link to="/register" className="text-fk-blue font-bold text-sm hover:underline">
+                        New to SellPhone? Create an account
+                    </Link>
+                </div>
             </div>
         </div>
     );
 };
 
-export default Login;
+export default LoginPage;

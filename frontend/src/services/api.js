@@ -1,18 +1,17 @@
 import axios from 'axios';
+import Qs from 'qs';
 
-// Use relative /api for Vercel Proxy (Production) or direct IP for local
 const api = axios.create({
-    baseURL: import.meta.env.MODE === 'production' ? '/api' : import.meta.env.VITE_API_URL,
-    paramsSerializer: {
-        indexes: null, // by default arrays are serialized as brand[]=Apple, this changes it to brand=Apple
-    }
+    // Vercel proxy will handle /api to your EC2
+    baseURL: import.meta.env.VITE_API_URL || '/api/v1',
+    paramsSerializer: (params) => Qs.stringify(params, { arrayFormat: 'repeat' })  // You might need to npm install qs
 });
 
-// Interceptor: Automatically injects 'user-id' into every request header
+// Interceptor: Injects JWT into every request
 api.interceptors.request.use((config) => {
-    const userId = localStorage.getItem('userId');
-    if (userId) {
-        config.headers['user-id'] = userId;
+    const token = localStorage.getItem('token');
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
 });
