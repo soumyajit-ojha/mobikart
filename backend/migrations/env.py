@@ -16,6 +16,8 @@ config.set_main_option("sqlalchemy.url", DATABASE_URL)
 
 from app.models.base import BaseModel
 from app.models.user import User, Profile, Address
+from app.models.products import Product
+from app.models.ecommerce import Cart, CartItem, Wishlist
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.

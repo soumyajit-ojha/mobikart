@@ -1,32 +1,70 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar';
 import HomePage from './pages/HomePage';
-import Login from './pages/LoginPage';
-import Register from './pages/Register';
-import Profile from './pages/Profile';
-import SellerLanding from './pages/SellerLanding';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import SellerDashboard from './pages/seller/SellerDashboard';
+import ProductDetailPage from './pages/ProductDetailPage';
+
+import ProfilePage from './pages/ProfilePage';
+import AddressPage from './pages/AddressPage';
+import CartPage from './pages/CartPage';
+import WishlistPage from './pages/WishlistPage';
+
+import ProtectedRoute from './components/ProtectedRoute';
+import { AuthProvider } from './context/AuthContext';
 
 function App() {
   return (
     <AuthProvider>
       <Router>
-        <div className="min-h-screen bg-gray-100">
-          <Navbar />
-          <div className="max-w-7xl mx-auto">
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-
-              <Route path="/seller" element={<SellerLanding />} />
-              <Route path="/seller-login" element={<Login isSeller={true} />} />
-              <Route path="/seller-register" element={<Register isSeller={true} />} />
-
-              <Route path="/profile" element={<Profile />} />
-            </Routes>
-          </div>
-        </div>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/addresses"
+            element={
+              <ProtectedRoute>
+                <AddressPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/cart"
+            element={
+              <ProtectedRoute>
+                <CartPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/seller-dashboard"
+            element={
+              <ProtectedRoute requiredRole="seller">
+                <SellerDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/wishlist"
+            element={
+              <ProtectedRoute>
+                <WishlistPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/product/:id" element={<ProductDetailPage />} />
+        </Routes>
       </Router>
     </AuthProvider>
   );
