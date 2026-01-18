@@ -9,11 +9,6 @@ const Navbar = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const navigate = useNavigate();
 
-    const handleSearch = (e) => {
-        if (e.key === 'Enter') {
-            navigate(`/?q=${searchTerm}`);
-        }
-    };
 
     return (
         <nav className="bg-fk-blue text-white sticky top-0 z-50 py-2.5 shadow-md">
@@ -30,16 +25,21 @@ const Navbar = () => {
                 </Link>
 
                 {/* Search Bar */}
-                <div className="flex-1 max-w-xl relative">
+                <div className="flex-1 max-w-xl flex items-center bg-white rounded-sm overflow-hidden shadow-sm">
                     <input
                         type="text"
                         placeholder="Search for mobiles, brands and more"
-                        className="w-full py-2 px-4 pr-10 text-black text-sm rounded-sm outline-none placeholder:text-gray-500 shadow-sm"
+                        className="flex-1 py-2 px-4 text-black text-sm outline-none placeholder:text-gray-500 bg-white"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        onKeyDown={handleSearch}
+                        onKeyDown={(e) => e.key === 'Enter' && navigate(`/?q=${searchTerm}`)}
                     />
-                    <Search className="absolute right-3 top-2 text-fk-blue cursor-pointer" size={18} />
+                    <button
+                        onClick={() => navigate(`/?q=${searchTerm}`)}
+                        className="px-3 text-fk-blue hover:opacity-80 transition-opacity bg-white flex items-center justify-center"
+                    >
+                        <Search size={18} />
+                    </button>
                 </div>
 
                 {/* Actions */}
