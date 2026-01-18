@@ -2,10 +2,12 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { userService } from '../services/userService';
+import { Eye, EyeOff } from 'lucide-react';
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
@@ -64,14 +66,21 @@ const LoginPage = () => {
                             onChange={(e) => setEmail(e.target.value)}
                         />
                     </div>
-                    <div className="relative border-b border-gray-300 focus-within:border-fk-blue">
+                    <div className="relative border-b border-gray-300 focus-within:border-fk-blue flex items-center">
                         <input
-                            type="password"
+                            type={showPassword ? "text" : "password"}
                             required
                             placeholder="Enter Password"
-                            className="w-full py-2 outline-none text-sm"
+                            className="flex-1 py-2 outline-none text-sm"
                             onChange={(e) => setPassword(e.target.value)}
                         />
+                        <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="text-gray-400 hover:text-fk-blue px-2"
+                        >
+                            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                        </button>
                     </div>
 
                     {error && <p className="text-red-500 text-xs font-bold">{error}</p>}
