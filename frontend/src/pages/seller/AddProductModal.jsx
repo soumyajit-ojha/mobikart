@@ -56,7 +56,7 @@ const AddProductModal = ({ onClose, onRefresh }) => {
                         <input type="text" placeholder="Brand (e.g. Apple)" required className="w-full border p-2 text-sm" onChange={e => setSpecs({ ...specs, brand: e.target.value })} />
                         <input type="text" placeholder="Model Name" required className="w-full border p-2 text-sm" onChange={e => setSpecs({ ...specs, model_name: e.target.value })} />
                         <div className="flex gap-4">
-                            <input type="number" placeholder="Price" required className="flex-1 border p-2 text-sm" onChange={e => setSpecs({ ...specs, price: e.target.value })} />
+                            <input type="number" step="0.01" placeholder="Price" required className="flex-1 border p-2 text-sm" onChange={e => setSpecs({ ...specs, price: e.target.value })} />
                             <input type="number" placeholder="Stock" required className="flex-1 border p-2 text-sm" onChange={e => setSpecs({ ...specs, stock: e.target.value })} />
                         </div>
                         <div className="flex gap-4">
@@ -66,7 +66,7 @@ const AddProductModal = ({ onClose, onRefresh }) => {
                         <input type="text" placeholder="Processor" required className="w-full border p-2 text-sm" onChange={e => setSpecs({ ...specs, processor: e.target.value })} />
                         <div className="flex gap-4">
                             <input type="number" placeholder="Battery (mAh)" required className="flex-1 border p-2 text-sm" onChange={e => setSpecs({ ...specs, battery: e.target.value })} />
-                            <input type="number" placeholder="Screen Size (inches)" required className="flex-1 border p-2 text-sm" onChange={e => setSpecs({ ...specs, screen_size: e.target.value })} />
+                            <input type="number" step="0.1" placeholder="Screen Size (inches)" required className="flex-1 border p-2 text-sm" onChange={e => setSpecs({ ...specs, screen_size: e.target.value })} />
                         </div>
                     </div>
 
