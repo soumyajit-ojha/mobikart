@@ -15,7 +15,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://40.192.15.153:8000', // Or 'http://127.0.0.1:8000' if running backend locally
+        target: 'http://16.112.67.253:8000', // Or 'http://127.0.0.1:8000' if running backend locally
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
       },
